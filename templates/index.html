@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Matching System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="max-w-6xl mx-auto p-6">
+
+        <h1 class="text-3xl font-bold text-center mb-6">
+            Blind Date Matching
+        </h1>
+
+        <!-- INPUT JUMLAH -->
+        <form method="POST">
+        
+            <!-- INPUT JUMLAH -->
+            {% if n == 0 %}
+            <div class="bg-white p-4 rounded-xl shadow mb-4">
+                <label>Jumlah Peserta</label>
+                <input type="number" name="num_people" class="border p-2 w-full" required>
+                <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">Next</button>
+            </div>
+            {% endif %}
+        
+            <!-- FORM PILIHAN -->
+            {% if n > 0 %}
+            <input type="hidden" name="n" value="{{n}}">
+        
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h3>Pria</h3>
+                    {% for i in range(n) %}
+                    <input name="men_{{i}}" class="w-full mb-2 border p-2" placeholder="contoh: 1 2 3" required>
+                    {% endfor %}
+                </div>
+        
+                <div>
+                    <h3>Wanita</h3>
+                    {% for i in range(n) %}
+                    <input name="women_{{i}}" class="w-full mb-2 border p-2" placeholder="contoh: 0 2 4" required>
+                    {% endfor %}
+                </div>
+            </div>
+        
+            <button class="mt-4 bg-green-600 text-white px-6 py-2 rounded">
+                Match
+            </button>
+            {% endif %}
+        
+        </form>
+        {% if men_choices and women_choices %}
+        <div class="mt-8 grid grid-cols-2 gap-6">
+        
+            <!-- PILIHAN PRIA -->
+            <div class="bg-white p-5 rounded-xl shadow">
+                <h2 class="text-lg font-semibold mb-3">👨 Pilihan Pria</h2>
+        
+                {% for i in range(men_choices|length) %}
+                <div class="mb-3 p-3 border rounded-lg bg-gray-50">
+                    <div class="font-medium">Pria {{i}}</div>
+                    <div class="flex gap-2 mt-1">
+                        {% for p in men_choices[i] %}
+                        <span class="px-2 py-1 bg-blue-100 rounded">
+                            {{p}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+            <!-- PILIHAN WANITA -->
+            <div class="bg-white p-5 rounded-xl shadow">
+                <h2 class="text-lg font-semibold mb-3">👩 Pilihan Wanita</h2>
+        
+                {% for i in range(women_choices|length) %}
+                <div class="mb-3 p-3 border rounded-lg bg-gray-50">
+                    <div class="font-medium">Wanita {{i}}</div>
+                    <div class="flex gap-2 mt-1">
+                        {% for p in women_choices[i] %}
+                        <span class="px-2 py-1 bg-pink-100 rounded">
+                            {{p}}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        
+        </div>
+        {% endif %}
+
+        {% if matches %}
+        <div class="mt-8 bg-white p-6 rounded-xl shadow">
+
+            <div class="flex justify-between mb-4">
+                <h2 class="text-xl font-semibold">Hasil Matching</h2>
+                <a href="/export" class="bg-green-600 text-white px-4 py-2 rounded">
+                     Export Excel
+                </a>
+            </div>
+
+            <table class="w-full border">
+                <tr class="bg-gray-200">
+                    <th>Pria</th>
+                    <th>Wanita</th>
+                    <th>Skor</th>
+                    <th>Tipe</th>
+                </tr>
+
+                {% for m, w, score, tipe in matches %}
+                <tr class="text-center {% if tipe == 'Mutual' %}bg-green-100{% else %}bg-red-100{% endif %}">
+                    <td>{{m}}</td>
+                    <td>{{w}}</td>
+                    <td>{{score}}</td>
+                    <td>{{tipe}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+
+</html>
